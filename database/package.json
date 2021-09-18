@@ -10,6 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.4",
-    "mongodb": "^4.1.2"
+    "bluebird": "^3.7.2",
+    "mongodb": "^4.1.2",
+    "random-js": "^2.1.0"
   }
 }

@@ -1,5 +1,8 @@
 const axios = require('axios')
 const fs = require('fs')
+const path = require('path')
+
+const Promise = require('bluebird')
 
 const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://admin:<password>@cluster0.wfujl.mongodb.net/contact-tracing?retryWrites=true&w=majority";
@@ -32,6 +35,12 @@ const courses = {
     ],
     "MATH": [
 
+    ],
+    "ENAE": [
+
+    ],
+    "ECON": [
+
     ]
 }
 
@@ -57,21 +66,34 @@ const getCourses = async function (dept) {
     //         fs.writeFile('courses.json', JSON.stringify(json), err => console.log(err))
     //         console.log(res.course_id)
 //     })
-let json = JSON.parse({})
-depts.forEach(dept => {
-    let courseDept = []
-    axios.get(base + "/courses?dept_id=" + dept) 
+let json = {}
+
+Promise.each(depts, dept => {
+    let courseDept = {}
+    return axios.get(base + "/courses?dept_id=" + dept) 
         .then(res => {
+            let temp = {}
             res.data.forEach(course => {
                 courseDept[course.course_id] = course.sections
-               
+                json[dept] = courseDept
+
             })
-            json.push({[dept]: courseDept})
-            console.log(courseDept)
-            console.log(JSON.stringify(json))
+            return json
+            
+            
         })
 })
-
+.then(res => {
+    // console.log(res)
+    console.log(json)
+    fs.writeFileSync(path.join(__dirname, 'courses.json'), JSON.stringify(json))
+    // fs.writeFileSync('./courses.json', JSON.stringify(json))
+})
+// depts.forEach(dept => {
+//     let courseDept = []
+    
+    
+// })
 
 
 
