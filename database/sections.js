@@ -23,15 +23,34 @@ depts.forEach(dept => {
                 master.push(section)
             }
         }
-        // master.concat(raw[depts][cls])
-    }
-    
-    
-    // courseList.forEach(course => {
-    //     console.log(course)
-    // })
-   
+    }  
 })
 
-console.log(master)
+let sectionStrings = []
+let i,j,temp,chunk = 100;
+for (i = 0, j = master.length; i < j; i += chunk) {
+    sectionStrings.push(master.slice(i, i+ chunk))
+}
+
+let newStrings = []
+
+sectionStrings.forEach(str => {
+    newStrings.push(str.join(","))
+})
+console.log(newStrings)
+
+
+// function wait(ms, value) {
+//     return new Promise(resolve => setTimeout(resolve, ms, value));
+// }
+
+// Promise.map(master, async section => {
+//     await axios.get(`${base}/courses/sections/${section}`)
+//         .then(async res => wait(1000, res))
+//         .then(res => {
+//             console.log(res.data)
+//         })
+// }, {concurrency: 2})
+
+
 
