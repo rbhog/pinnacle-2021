@@ -1,0 +1,19 @@
+{
+  "name": "pinnacle-2021",
+  "version": "1.0.0",
+  "description": "proof of concept covid tracing plotted on a map, designed around the UMD campus",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbhog/pinnacle-2021.git"
+  },
+  "author": "notjason, chiumax, robertsbao, rbhog",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rbhog/pinnacle-2021/issues"
+  },
+  "homepage": "https://github.com/rbhog/pinnacle-2021#readme"
+}
