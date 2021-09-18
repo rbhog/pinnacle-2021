@@ -3,16 +3,19 @@ import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import Slider from '../Slider';
 
+import buildings from '../../geojson/master.geojson';
+
 mapboxgl.accessToken =
   'pk.eyJ1IjoicmJob2ciLCJhIjoiY2tieWE0N3ByMGFhMTJ5dDZldXA2b3E0bCJ9.9m48ruH9QzUOYpeISYI-lg';
 
 export default function Map() {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(-70.9);
-  const [lat, setLat] = useState(42.35);
-  const [zoom, setZoom] = useState(9);
-
+  const [lng, setLng] = useState(-76.943316049);
+  const [lat, setLat] = useState(38.98611);
+  const [zoom, setZoom] = useState(16.15);
+  let m;
+  // 38.986117691303434, -76.9433160497966
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
@@ -21,7 +24,22 @@ export default function Map() {
       center: [lng, lat],
       zoom: zoom,
     });
-  });
+    m = map.current;
+    m.on('load', function () {
+      m.addSource('buildings', {
+        type: 'geojson',
+        data: buildings,
+      }).addLayer({
+        id: 'layers',
+        type: 'fill',
+        source: 'buildings',
+        paint: {
+          'fill-color': '#E21833',
+          'fill-opacity': 0.01,
+        },
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (!map.current) return; // wait for map to initialize
