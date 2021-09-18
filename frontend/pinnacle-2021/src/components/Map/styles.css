@@ -22,9 +22,9 @@
   font-family: monospace;
   z-index: 12;
   position: absolute;
-  width: 500px;
-  bottom: 100px;
+  width: 100vw;
+  bottom: 0;
   left: 0;
-  margin: 12px;
+
   border-radius: 4px;
 }

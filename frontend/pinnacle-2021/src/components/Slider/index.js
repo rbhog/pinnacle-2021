@@ -7,7 +7,6 @@ import 'ion-rangeslider/css/ion.rangeSlider.min.css';
 
 const Slider = () => {
   const [slider, setSlider] = useState(null);
-  const [range, setRange] = useState([]);
 
   useEffect(() => {
     $('.js-range-slider').ionRangeSlider({ skin: 'square' });
