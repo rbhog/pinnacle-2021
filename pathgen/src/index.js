@@ -28,27 +28,9 @@ async function getRoute(waypoints) {
         }
     }
 
-    // return await axios.get(`${base}${points}?geometries=geojson&access_token=${process.env.MAPBOX_ACCESS_TOKEN}`)//.then((res) => {
-        // console.log(res.data.routes[0].geometry.coordinates)
-
-    //     lineString.geometry.coordinates = res.data.routes[0].geometry.coordinates
-    // }).catch((err) => {
-    //     console.log(err)
-    // })
-
 }
 
 
 getRoute([[-84.518641, 39.134270], [-84.512023, 39.102779]]).then((res) => {
     console.log(res)
 })
-//     var lineString = {
-//         "type": "Feature",
-// 	    "geometry": {
-//     	    "type": "LineString",
-//         	"coordinates": res.data.routes[0].geometry.coordinates
-//         }
-//     }
-
-
-// })
