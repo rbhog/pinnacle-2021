@@ -1,5 +1,6 @@
 const { default: axios } = require('axios');
 const coursesFile = require('./courses.json')
+const sectionsFile = require('./uniquesections.json')
 
 let depts = Object.keys(coursesFile)
 
@@ -40,59 +41,67 @@ for (let i = 0; i < numToGen; i++) {
     courses.forEach(course => {
         let courseSection = coursesFile[course.substring(0,4)][course][0]
         if (coursesFile[course.substring(0,4)][course][0] == undefined) return
-        console.log(courseSection)
+        let sectionData = sectionsFile.find(o => o.section_id === courseSection)
+        console.log(sectionData)
 
-        axios.get(`${base}/courses/${course}/sections/${courseSection.split("-")[1]}`).then((res) => {
-            let classMeets = res.data[0].meetings
 
-            // Sorts sections to get unique times
-            let uniques = []  // holds unique sections for given course
-            const map = new Map()
+        sectionData.meetings.forEach(meeting => {
+            let days = []//meeting.days.split() // all days that the given time meets
+            if(meeting.days.includes('M')){
+                days.push('M');
+            }if(meeting.days.includes('Tu')){
+                days.push('T');
+            }if(meeting.days.includes('W')){
+                days.push('W');
+            }if(meeting.days.includes('Th')){
+                days.push('R');
+            }if(meeting.days.includes('F')){
+                days.push('F');
+            }
+            console.log(days)
+            // days.forEach(day => {
+            //     if(!schedule[day].includes(meeting.start_time())){
+            //         schedule.day.push(meeting.start_time())
+            //     }
+            // })
 
-            classMeets.forEach(meeting => {
-                let id = Object.values(meeting).join()
-                if (!map.has(id)) {
-                    map.set(id, true)
-                    uniques.push(meeting)
-                }
-            })
 
-            // end section filtering
-            uniques.forEach(meeting => {
-                let days = []//meeting.days.split() // all days that the given time meets
-                if(meeting.days.includes('M')){
-                    days.push('M');
-                }if(meeting.days.includes('Tu')){
-                    days.push('T');
-                }if(meeting.days.includes('W')){
-                    days.push('W');
-                }if(meeting.days.includes('Th')){
-                    days.push('R');
-                }if(meeting.days.includes('F')){
-                    days.push('F');
-                }
-                // days.forEach(day => {
-                //     if(!schedule[day].includes(meeting.start_time())){
-                //         schedule.day.push(meeting.start_time())
-                //     }
-                // })
-
-                
-                let dayIndex = 0
-                console.log(days[dayIndex])
-                if (!days.some(day => {return !schedule[day].includes(meeting.start_time)})) {
-                    schedule[days[dayIndex]++].push(meeting.start_time)
-                } else {
-                    return
-                }
-            })
-
-            console.log(schedule)
-
+            let dayIndex = 0
+            // console.log(days[dayIndex])
+            if (!days.some(day => {return !schedule[day].start_time == meeting.start_time})) {
+                console.log("fits schedule")
+                meeting["courseSection"] = courseSection
+                days.forEach(day => {
+                    schedule[day].push(meeting)
+                })
+                // schedule[days[dayIndex++]].push(meeting)
+            } else {
+                return
+            }
         })
 
+        // axios.get(`${base}/courses/${course}/sections/${courseSection.split("-")[1]}`).then((res) => {
+        //     let classMeets = res.data[0].meetings
+
+        //     // Sorts sections to get unique times
+        //     let uniques = []  // holds unique sections for given course
+        //     const map = new Map()
+
+        //     classMeets.forEach(meeting => {
+        //         let id = Object.values(meeting).join()
+        //         if (!map.has(id)) {
+        //             map.set(id, true)
+        //             uniques.push(meeting)
+        //         }
+        //     })
+
+        //     // end section filtering
+            
+
+        // })
+
     })
-    
+    console.log(schedule)
     /*
 
     {
