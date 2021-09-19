@@ -6,15 +6,17 @@ const PORT = process.env.PORT || 3001
 
 const app = express()
 
-const dataDir = path.resolve(__dirname, "../pinnacle-2021/data")
+const dataDir = path.resolve(__dirname, "../data")
 
 app.get("/paths", (req, res) => {
+  console.log("t")
   res.json(
     fs
       .readdirSync(dataDir, { withFileTypes: true })
       .filter((e) => !e.isDirectory() && !e.name.startsWith("."))
       .map(e => e.name)
   )
+
 })
 
 app.get("/paths/:file", (req, res) => {

@@ -1,0 +1,40 @@
+@import 'theme/theme';
+
+.nav {
+  @include shadow;
+
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 80px;
+
+  box-sizing: border-box;
+  padding: 0 40px;
+
+  background-color: $red;
+
+  & > h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+
+    color: white;
+  }
+}
+
+.content {
+  @include flexRow;
+
+  height: calc(100vh - 80px);
+
+  .map {
+    // TODO: This line should probably go in <Map /> as a container property
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+  }
+}

@@ -8,7 +8,7 @@ const prettify = (time) => {
 
 const Popup = ({ data }) => {
   const {
-    NAME: name,
+    NAME: name,LUID: luid,
     TIME_START: start,
     TIME_END: end,
     TIME_STEP: step,
@@ -19,12 +19,8 @@ const Popup = ({ data }) => {
   const speed = (dist / (end - start)) * 60 * 60
 
   return (
-    <div className={styles.container}>
+    <div >
       <h2>{name}</h2>
-
-      <p>
-        <b>LUID:</b> {luid}
-      </p>
 
       <p>
         <b>Time Start:</b> {prettify(start)}
