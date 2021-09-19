@@ -12,5 +12,6 @@ possibly work with course size as a determinant of transmission risk, large lect
  - [chakra-ui](https://github.com/chakra-ui/chakra-ui)
  - Twilio
  - Mapbox JS
+ - Mapbox Directions API
  - umd.io
  - Express
