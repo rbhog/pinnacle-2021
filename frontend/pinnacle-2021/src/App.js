@@ -23,6 +23,21 @@ function App() {
 
   const [map, setMap] = useState(null)
 
+  const startTimer = useCallback(() => {
+    if (time >= endTime) {
+      return
+    }
+
+    setTimer(true)
+  }, [time, endTime])
+
+  const stopTimer = useCallback(()=> {
+    setTimer(false)
+  }, []);
+
+
+  
+
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
