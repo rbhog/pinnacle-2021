@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/rbhog/pinnacle-2021/issues"
   },
-  "homepage": "https://github.com/rbhog/pinnacle-2021#readme"
+  "homepage": "https://github.com/rbhog/pinnacle-2021#readme",
+  "dependencies": {
+    "twilio": "^3.67.2"
+  }
 }
