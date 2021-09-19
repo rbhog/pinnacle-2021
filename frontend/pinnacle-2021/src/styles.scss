@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
 .map-container {
   height: 800px;
+}
+
+h1 {
+  font-family: 'Lato', sans-serif
 }
 
 .sidebar {
@@ -9,7 +15,7 @@
   font-family: monospace;
   z-index: 1;
   position: absolute;
-  top: 0;
+  top: 80px;
   left: 0;
   margin: 12px;
   border-radius: 4px;
