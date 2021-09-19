@@ -1,211 +1,251 @@
 import React, { useRef, useEffect, useState } from 'react';
-
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import Slider from '../Slider';
-
-import buildings from '../../geojson/master.geojson';
 
 mapboxgl.accessToken =
-  'pk.eyJ1IjoicmJob2ciLCJhIjoiY2tieWE0N3ByMGFhMTJ5dDZldXA2b3E0bCJ9.9m48ruH9QzUOYpeISYI-lg';
+  'pk.eyJ1Ijoicm9iZXJ0YmFvIiwiYSI6ImNrbmJ4b2EyazB3a2kyb29vdmI4NnFhdHkifQ.eWUrs0-n2fF0u1XZhNbE4w';
 
-export default function Map() {
+export default function App() {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(-76.943316049);
-  const [lat, setLat] = useState(38.98611);
-  const [zoom, setZoom] = useState(16.15);
+  const [lng, setLng] = useState(-70.9);
+  const [lat, setLat] = useState(42.35);
+  const [zoom, setZoom] = useState(9);
+
   let m;
-  // 38.986117691303434, -76.9433160497966
+
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [lng, lat],
-      zoom: zoom,
+      style: 'mapbox://styles/mapbox/dark-v10',
+      center: [-76.9425, 38.9901],
+      zoom: 14.71,
     });
+
     m = map.current;
-    m.on('load', function () {
-      m.addSource('buildings', {
-        type: 'geojson',
-        data: buildings,
-      }).addLayer({
-        id: 'layers',
-        type: 'fill',
-        source: 'buildings',
-        paint: {
-          'fill-color': '#E21833',
-          'fill-opacity': 0.01,
-        },
-      });
-    });
   }, []);
 
   useEffect(() => {
     if (!map.current) return; // wait for map to initialize
+    if (!m) return;
     map.current.on('move', () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
-  });
+    m.on('load', () => {
+      /**
+       * Skybox
+       */
+      m.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun': [0.0, 90.0],
+          'sky-atmosphere-color': '#1a1a1aEF',
+          'sky-atmosphere-sun-intensity': 15,
+        },
+      });
 
-  useEffect(() => {
-    map.addControl(new CompassControl(), 'top-right');
-    map.addControl(new ZoomControl(), 'top-right');
-    map.addControl(
-      new RulerControl({
-        mainColor: '#E21833',
-        secondaryColor: '#414141',
-        units: 'miles',
-        labelFormat: n => `${n.toFixed(2)} miles`,
-      }),
-      'top-right'
-    );
-    map.addControl(new InspectControl(), 'top-right');
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s1', {
+        type: 'geojson',
+        data: './geojson/path0.geojson',
+      });
+      m.addLayer({
+        id: 's1-outline',
+        type: 'line',
+        source: 's1',
+        layout: {},
+        paint: {
+          'line-color': '#ff4500',
+          'line-width': 4,
+        },
+      });
 
-    map.on('move', () => {
-      setMapState({
-        lat: map.getCenter().lat.toFixed(4),
-        lng: map.getCenter().lng.toFixed(4),
-        zoom: map.getZoom().toFixed(2),
+      // s2
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s2', {
+        type: 'geojson',
+        data: './geojson/path1.geojson',
+      });
+      m.addLayer({
+        id: 's2-outline',
+        type: 'line',
+        source: 's2',
+        layout: {},
+        paint: {
+          'line-color': '#9ebf36',
+          'line-width': 4,
+        },
+      });
+
+      // s3
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s3', {
+        type: 'geojson',
+        data: './geojson/path2.geojson',
+      });
+      m.addLayer({
+        id: 's3-outline',
+        type: 'line',
+        source: 's3',
+        layout: {},
+        paint: {
+          'line-color': '#59e16a',
+          'line-width': 4,
+        },
+      });
+
+      // s4
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s4', {
+        type: 'geojson',
+        data: './geojson/path3.geojson',
+      });
+      m.addLayer({
+        id: 's4-outline',
+        type: 'line',
+        source: 's4',
+        layout: {},
+        paint: {
+          'line-color': '#4aa1f4',
+          'line-width': 4,
+        },
+      });
+
+      // s5
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s5', {
+        type: 'geojson',
+        data: './geojson/path4.geojson',
+      });
+      m.addLayer({
+        id: 's5-outline',
+        type: 'line',
+        source: 's5',
+        layout: {},
+        paint: {
+          'line-color': '#a63928',
+          'line-width': 4,
+        },
+      });
+            m.addSource('s6', {
+        type: 'geojson',
+        data: './geojson/path5.geojson',
+      });
+      m.addLayer({
+        id: 's6-outline',
+        type: 'line',
+        source: 's6',
+        layout: {},
+        paint: {
+          'line-color': '#9932cc',
+          'line-width': 4,
+        },
+      });
+
+      // s2
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s7', {
+        type: 'geojson',
+        data: './geojson/path6.geojson',
+      });
+      m.addLayer({
+        id: 's7-outline',
+        type: 'line',
+        source: 's7',
+        layout: {},
+        paint: {
+          'line-color': '#9ebf36',
+          'line-width': 4,
+        },
+      });
+
+      // s3
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s8', {
+        type: 'geojson',
+        data: './geojson/path7.geojson',
+      });
+      m.addLayer({
+        id: 's8-outline',
+        type: 'line',
+        source: 's8',
+        layout: {},
+        paint: {
+          'line-color': '#59e16a',
+          'line-width': 4,
+        },
+      });
+
+      // s4
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s9', {
+        type: 'geojson',
+        data: './geojson/path8.geojson',
+      });
+      m.addLayer({
+        id: 's4-outline',
+        type: 'line',
+        source: 's9',
+        layout: {},
+        paint: {
+          'line-color': '#4aa1f4',
+          'line-width': 4,
+        },
+      });
+
+      // s5
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s10', {
+        type: 'geojson',
+        data: './geojson/path9.geojson',
+      });
+      m.addLayer({
+        id: 's10-outline',
+        type: 'line',
+        source: 's10',
+        layout: {},
+        paint: {
+          'line-color': '#a63928',
+          'line-width': 4,
+        },
       });
     });
-  }, [map]);
-
-  useEffect(() => {
-    if (!map) return;
-
-    // Clear distance layer & initiate empty distances[]
-    // map.getSource("distances").setData(featureCollection([]))
-
-    // let distances = []
-    // let speeds = []
-
-    paths.forEach(({ enabled, data }, i) => {
-      let {
-        NAME: name,
-        TIME_START: start,
-        TIME_END: end,
-        TIME_STEP: step,
-      } = data.properties;
-
-      const lineLayerName = 'path_' + name + '_line';
-      const circleLayerName = 'path_' + name + '_circle';
-
-      const endIndex = ~~((time - start) / step);
-      const coords = [...data.geometry.coordinates].slice(0, endIndex + 1);
-
-      const lastPoint = coords[endIndex];
-
-      // Clear circles if not in time range / not enabled
-      // Clear lines if there aren't >= 2 points
-
-      if (!enabled || time < start || time > end)
-        map.getSource(circleLayerName).setData(featureCollection([]));
-
-      if (!enabled || time <= start) {
-        map.getSource(lineLayerName).setData(featureCollection([]));
-        return;
-      }
-
-      // Add line if at least 2 points
-      if (coords.length >= 2) {
-        map.getSource(lineLayerName).setData(lineString(coords));
-        // .setData(bezierSpline(lineString(coords), { resolution: 1000000, sharpness: 0.6 }))
-      }
-
-      // Add circle & perform collision detection if in time range
-      if (lastPoint) {
-        map.getSource(circleLayerName).setData(
-          featureCollection([
-            circle(lastPoint, SAFE_RADIUS, {
-              steps: 500,
-              units: 'kilometers',
-            }),
-          ])
-        );
-      }
-    });
-
-    // setPathSpeeds(speeds)
-  }, [map, time, paths]);
-
-  useEffect(() => {
-    if (!map) return;
-
-    paths.forEach(({ enabled, data }) => {
-      const lineLayerName = 'path_' + data.properties.NAME + '_line';
-      const circleLayerName = 'path_' + data.properties.NAME + '_circle';
-      const lineLayer = map.getSource(lineLayerName);
-
-      // If line layer exists already, show / hide
-      if (lineLayer) {
-        map.setLayoutProperty(
-          lineLayerName,
-          'visibility',
-          enabled ? 'visible' : 'none'
-        );
-
-        return;
-      }
-
-      map.on('mouseenter');
-
-      map.on('click', lineLayerName, e => handleClick(map, e.lngLat, data));
-      map.on('click', circleLayerName, e => handleClick(map, e.lngLat, data));
-
-      map.on('mouseenter', lineLayerName, () => handleMouse(map, 'pointer'));
-      map.on('mouseenter', circleLayerName, () => handleMouse(map, 'pointer'));
-
-      map.on('mouseleave', lineLayerName, () => handleMouse(map, ''));
-      map.on('mouseleave', circleLayerName, () => handleMouse(map, ''));
-
-      // Add initial sources + layers
-      // Initial source has empty featureCollection, since it'll be updated later
-      map
-        .addSource(lineLayerName, {
-          type: 'geojson',
-          data: featureCollection([]),
-        })
-        .addSource(circleLayerName, {
-          type: 'geojson',
-          data: featureCollection([]),
-        })
-        .addLayer({
-          id: lineLayerName,
-          type: 'line',
-          source: lineLayerName,
-          paint: {
-            'line-color': data.properties.COLOR,
-            'line-opacity': 0.4,
-            'line-width': 2,
-          },
-          layout: {
-            'line-cap': 'round',
-            'line-join': 'bevel',
-          },
-        })
-        .addLayer({
-          id: circleLayerName,
-          type: 'fill',
-          source: circleLayerName,
-          paint: {
-            'fill-color': data.properties.COLOR,
-            'fill-opacity': 0.2,
-            'fill-outline-color': data.properties.COLOR,
-          },
-        });
-    });
-  }, [map, paths]);
+  });
 
   return (
     <div>
       <div className="sidebar">
         Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-      </div>
-      <div className="sidebar-slider">
-        <Slider />
       </div>
       <div ref={mapContainer} className="map-container" />
     </div>

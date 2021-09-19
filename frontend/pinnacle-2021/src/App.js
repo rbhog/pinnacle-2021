@@ -1,56 +1,23 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import { ChakraProvider, Box, theme } from '@chakra-ui/react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link as RouterLink,
-} from 'react-router-dom';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import './components/Map/styles.css';
+import React, { useState, useEffect, useCallback } from 'react';
+import randomColor from 'randomcolor';
+import Promise from 'bluebird';
 
 import Map from './components/Map';
-import AppContext from "./context/AppContext";
 
-function App() {
-  const [paths, setPaths] = useState([])
-   const [timer, setTimer] = useState(false)
+import styles from './styles.scss';
 
-  const [time, setTime] = useState(-1)
-  const [timeScalar, setTimeScalar] = useState(1)
-  const [startTime, setStartTime] = useState(-1)
-  const [endTime, setEndTime] = useState(-1)
-
-  const [map, setMap] = useState(null)
-
-  const startTimer = useCallback(() => {
-    if (time >= endTime) {
-      return
-    }
-
-    setTimer(true)
-  }, [time, endTime])
-
-  const stopTimer = useCallback(()=> {
-    setTimer(false)
-  }, []);
-
-
-  
-
+const App = () => {
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Router>
-          <Switch>
-            <Route path="/" exact>
-              <Map />
-            </Route>
-          </Switch>
-        </Router>
-      </Box>
-    </ChakraProvider>
+    <div>
+      <nav className={styles.nav}>
+        <h1>Covid Contact Tracing (UMD)</h1>
+      </nav>
+
+      <div className={styles.content}>
+        <Map className={styles.map} />
+      </div>
+    </div>
   );
-}
+};
 
 export default App;

@@ -10,7 +10,7 @@ console.log(process.env.MAPBOX_ACCESS_TOKEN);
 
 var base = "https://api.mapbox.com/directions/v5/mapbox/walking/";
 
-var schedules = JSON.parse(fs.readFileSync(path.join(__dirname, "schedules.json")))
+var schedules = JSON.parse(fs.readFileSync(path.join(__dirname, "schedules_combined.json")))
 
 async function getRoute(waypoints) {
     points = ""
@@ -38,6 +38,7 @@ async function getRoute(waypoints) {
 
 
 let routes = []
+let path_index = 1
 async function getAll() {
     for(let i = 0; i <schedules.length;i++) {
         let schedule = schedules[i];
@@ -52,20 +53,27 @@ let route = []
         let pth = await getRoute(route)
 
         console.log(pth)
-        routes.push({
+        fs.writeFileSync(path.join(__dirname, `path${i}.geojson`), JSON.stringify({
             "type": "Feature",
             "geometry": {
                 "type": "LineString",
                 "coordinates": pth
             }
-        })
+        }))
+        // routes.push({
+        //     "type": "Feature",
+        //     "geometry": {
+        //         "type": "LineString",
+        //         "coordinates": pth
+        //     }
+        // })
 
     }
 
 }
 
 getAll().then(res => {
-    fs.writeFileSync(path.join(__dirname, "paths.json"), JSON.stringify(routes))
+    // fs.writeFileSync(path.join(__dirname, "paths.json"), JSON.stringify(routes))
 })
 
 // getRoute([[-84.518641, 39.134270], [-84.512023, 39.102779]]).then((res) => {
