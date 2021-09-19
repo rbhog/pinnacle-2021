@@ -34,16 +34,15 @@ sectionsFile.forEach(section => {
     section.meetings.forEach(meeting => {
         // console.log(meeting)
         if (!unique.has(meeting.building)) unique.add(meeting.building)
-        if (meeting.building != '' || meeting.building != 'TBA' || meeting.building != 'ITV' || meeting.building != 'BLD1' || meeting.building != 'BLD4') {
+        if (meeting.building != '' || meeting.building != 'TBA' || meeting.building != 'ITV' || meeting.building != 'BLD1' || meeting.building != 'BLD4' || meeting.room != 'ONLINE') {
             uniqueMeetings.push(meeting)
         }
     })
     actuallyUniqueMeetings = uniqueMeetings.filter((v,i,a)=>a.findIndex(t=>(JSON.stringify(t) === JSON.stringify(v)))===i)
-    actuallyUniqueMeetings.forEach(meetings, idx, actuallyUniqueMeetings => {
-        meetings.forEach(meeting, idx, meetings => {
+    actuallyUniqueMeetings.forEach((meetings) => {
 
-        })
     })
+
     console.log(actuallyUniqueMeetings)
 })
 
