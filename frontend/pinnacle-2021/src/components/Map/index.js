@@ -61,7 +61,7 @@ export default function App() {
         source: 's1',
         layout: {},
         paint: {
-          'line-color': '#000',
+          'line-color': '#ff4500',
           'line-width': 4,
         },
       });
@@ -155,7 +155,7 @@ export default function App() {
         source: 's6',
         layout: {},
         paint: {
-          'line-color': '#000',
+          'line-color': '#9932cc',
           'line-width': 4,
         },
       });
