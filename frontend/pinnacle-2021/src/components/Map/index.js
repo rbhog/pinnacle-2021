@@ -1,260 +1,199 @@
-import ReactDOM from "react-dom"
-import React, { useRef, useState, useEffect, useContext, useMemo } from "react"
-import mapboxgl from "mapbox-gl"
-import { featureCollection, circle, lineString } from "@turf/turf"
-import {
-  FaPlayCircle,
-  FaPauseCircle,
-  FaBackward,
-  FaForward,
-} from "react-icons/fa"
-
-
-
-import AppContext from "../../context/AppContext"
-import TimeBar from "../Slider"
-import Popup from "../Popup"
-
-import styles from "./Map.module.scss"
-
-const SAFE_RADIUS = 0.04
+import React, { useRef, useEffect, useState } from 'react';
+import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoicmJob2ciLCJhIjoiY2tieWE0N3ByMGFhMTJ5dDZldXA2b3E0bCJ9.9m48ruH9QzUOYpeISYI-lg"
+  'pk.eyJ1Ijoicm9iZXJ0YmFvIiwiYSI6ImNrbmJ4b2EyazB3a2kyb29vdmI4NnFhdHkifQ.eWUrs0-n2fF0u1XZhNbE4w';
 
-const handleClick = (map, lngLat, data) => {
-  let popup = document.createElement("div")
-  ReactDOM.render(<Popup data={data} />, popup)
+export default function App() {
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [lng, setLng] = useState(-70.9);
+  const [lat, setLat] = useState(42.35);
+  const [zoom, setZoom] = useState(9);
 
-  new mapboxgl.Popup({
-    maxWidth: "none",
-  })
-    .setLngLat(lngLat)
-    .setDOMContent(popup)
-    .addTo(map)
-}
-
-const handleMouse = (map, value) => {
-  map.getCanvas().style.cursor = value
-}
-
-const Map = (props) => {
-  const mapRef = useRef()
-
-  // const [pathSpeeds, setPathSpeeds] = useState([])
-  const [currentMap, setCurrentMap] = useState(null)
-  const [mapState, setMapState] = useState({
-    lat: 38.9901,
-    lng: -76.9425,
-    zoom: 14.71,
-  })
-
-  const {
-    paths,
-    time,
-    timer,
-    stopTimer,
-    startTimer,
-    timeScalar,
-    setTimeScalar,
-
-    map,
-    setMap,
-  } = useContext(AppContext)
+  let m;
 
   useEffect(() => {
-    const myMap = new mapboxgl.Map({
-      container: mapRef.current,
-      style: "mapbox://styles/mapbox/dark-v10?optimize=true",
-      center: [mapState.lng, mapState.lat],
-      zoom: mapState.zoom,
+    if (map.current) return; // initialize map only once
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/dark-v10',
+      center: [-76.9425, 38.9901],
+      zoom: 14.71,
+    });
 
-      logoPosition: "top-right",
-
-      attributionControl: false,
-    })
-
-    myMap.on("load", () => {
-      setMap(myMap)
-    })
-  }, [])
+    m = map.current;
+  }, []);
 
   useEffect(() => {
-    if (!map) return
+    if (!map.current) return; // wait for map to initialize
+    if (!m) return;
+    map.current.on('move', () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
+    m.on('load', () => {
+      /**
+       * Skybox
+       */
+      m.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun': [0.0, 90.0],
+          'sky-atmosphere-color': '#1a1a1aEF',
+          'sky-atmosphere-sun-intensity': 15,
+        },
+      });
 
-    // map.addControl(new TooltipControl())
-   
-    map.on("move", () => {
-      setMapState({
-        lat: map.getCenter().lat.toFixed(4),
-        lng: map.getCenter().lng.toFixed(4),
-        zoom: map.getZoom().toFixed(2),
-      })
-    })
-  }, [map])
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s1', {
+        type: 'geojson',
+        data: './geojson/subject_1.geojson',
+      });
+      m.addLayer({
+        id: 's1-outline',
+        type: 'line',
+        source: 's1',
+        layout: {},
+        paint: {
+          'line-color': '#000',
+          'line-width': 8,
+        },
+      });
 
-  useEffect(() => {
-    if (!map) return
+      // s2
+      m.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun': [0.0, 90.0],
+          'sky-atmosphere-color': '#1a1a1aEF',
+          'sky-atmosphere-sun-intensity': 15,
+        },
+      });
 
-    paths.forEach(({ enabled, data }) => {
-      const lineLayerName = "path_" + data.properties.NAME + "_line"
-      const circleLayerName = "path_" + data.properties.NAME + "_circle"
-      const lineLayer = map.getSource(lineLayerName)
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s2', {
+        type: 'geojson',
+        data: './geojson/subject_1.geojson',
+      });
+      m.addLayer({
+        id: 's2-outline',
+        type: 'line',
+        source: 's2',
+        layout: {},
+        paint: {
+          'line-color': '#9ebf36',
+          'line-width': 8,
+        },
+      });
 
-      // If line layer exists already, show / hide
-      if (lineLayer) {
-        map.setLayoutProperty(
-          lineLayerName,
-          "visibility",
-          enabled ? "visible" : "none"
-        )
+      // s3
+      m.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun': [0.0, 90.0],
+          'sky-atmosphere-color': '#1a1a1aEF',
+          'sky-atmosphere-sun-intensity': 15,
+        },
+      });
 
-        return
-      }
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s3', {
+        type: 'geojson',
+        data: './geojson/subject_1.geojson',
+      });
+      m.addLayer({
+        id: 's3-outline',
+        type: 'line',
+        source: 's3',
+        layout: {},
+        paint: {
+          'line-color': '#59e16a',
+          'line-width': 8,
+        },
+      });
 
-      map.on("mouseenter")
+      // s4
+      m.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun': [0.0, 90.0],
+          'sky-atmosphere-color': '#1a1a1aEF',
+          'sky-atmosphere-sun-intensity': 15,
+        },
+      });
 
-      map.on("click", lineLayerName, (e) => handleClick(map, e.lngLat, data))
-      map.on("click", circleLayerName, (e) => handleClick(map, e.lngLat, data))
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s4', {
+        type: 'geojson',
+        data: './geojson/subject_1.geojson',
+      });
+      m.addLayer({
+        id: 's4-outline',
+        type: 'line',
+        source: 's4',
+        layout: {},
+        paint: {
+          'line-color': '#4aa1f4',
+          'line-width': 8,
+        },
+      });
 
-      map.on("mouseenter", lineLayerName, () => handleMouse(map, "pointer"))
-      map.on("mouseenter", circleLayerName, () => handleMouse(map, "pointer"))
+      // s5
+      m.addLayer({
+        id: 'sky',
+        type: 'sky',
+        paint: {
+          'sky-type': 'atmosphere',
+          'sky-atmosphere-sun': [0.0, 90.0],
+          'sky-atmosphere-color': '#1a1a1aEF',
+          'sky-atmosphere-sun-intensity': 15,
+        },
+      });
 
-      map.on("mouseleave", lineLayerName, () => handleMouse(map, ""))
-      map.on("mouseleave", circleLayerName, () => handleMouse(map, ""))
-
-      // Add initial sources + layers
-      // Initial source has empty featureCollection, since it'll be updated later
-      map
-        .addSource(lineLayerName, {
-          type: "geojson",
-          data: featureCollection([]),
-        })
-        .addSource(circleLayerName, {
-          type: "geojson",
-          data: featureCollection([]),
-        })
-        .addLayer({
-          id: lineLayerName,
-          type: "line",
-          source: lineLayerName,
-          paint: {
-            "line-color": data.properties.COLOR,
-            "line-opacity": 0.4,
-            "line-width": 2,
-          },
-          layout: {
-            "line-cap": "round",
-            "line-join": "bevel",
-          },
-        })
-        .addLayer({
-          id: circleLayerName,
-          type: "fill",
-          source: circleLayerName,
-          paint: {
-            "fill-color": data.properties.COLOR,
-            "fill-opacity": 0.2,
-            "fill-outline-color": data.properties.COLOR,
-          },
-        })
-    })
-  }, [map, paths])
-
-  useEffect(() => {
-    if (!map) return
-
-
-    paths.forEach(({ enabled, data }, i) => {
-      let {
-        NAME: name,
-        TIME_START: start,
-        TIME_END: end,
-        TIME_STEP: step,
-      } = data.properties
-
-      const lineLayerName = "path_" + name + "_line"
-      const circleLayerName = "path_" + name + "_circle"
-
-      const endIndex = ~~((time - start) / step)
-      const coords = [...data.geometry.coordinates].slice(0, endIndex + 1)
-
-      const lastPoint = coords[endIndex]
-
-      // Clear circles if not in time range / not enabled
-      // Clear lines if there aren't >= 2 points
-
-      if (!enabled || time < start || time > end)
-        map.getSource(circleLayerName).setData(featureCollection([]))
-
-      if (!enabled || time <= start) {
-        map.getSource(lineLayerName).setData(featureCollection([]))
-        return
-      }
-
-      // Add line if at least 2 points
-      if (coords.length >= 2) {
-        map.getSource(lineLayerName).setData(lineString(coords))
-
-      }
-
-      // Add circle & perform collision detection if in time range
-      if (lastPoint) {
-        map.getSource(circleLayerName).setData(
-          featureCollection([
-            circle(lastPoint, SAFE_RADIUS, {
-              steps: 500,
-              units: "kilometers",
-            }),
-          ])
-        )
-
-      }
-    })
-
-    // setPathSpeeds(speeds)
-  }, [map, time, paths])
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s5', {
+        type: 'geojson',
+        data: './geojson/subject_5.geojson',
+      });
+      m.addLayer({
+        id: 's5-outline',
+        type: 'line',
+        source: 's5',
+        layout: {},
+        paint: {
+          'line-color': '#a63928',
+          'line-width': 8,
+        },
+      });
+    });
+  });
 
   return (
-    <div {...props}>
-      <span className={styles.mapInfo}>
-        <p>Lat: {mapState.lat}</p>
-        <p>Lng: {mapState.lng}</p>
-        <p>Zoom: {mapState.zoom}</p>
-        <p>Time: {new Date(time * 1000).toLocaleString("en-US")}</p>
-        <p>Time Scalar: x{timeScalar.toFixed(2)}</p>
-      </span>
-
-      <div className={styles.map} ref={mapRef} />
-
-      <div className={styles.footer}>
-        {useMemo(
-          () => (
-            <FaBackward
-              onClick={() => setTimeScalar((timeScalar) => timeScalar / 2)}
-            />
-          ),
-          [setTimeScalar]
-        )}
-
-        {useMemo(() => {
-          if (timer) return <FaPauseCircle onClick={stopTimer} />
-          else return <FaPlayCircle onClick={startTimer} />
-        }, [timer, stopTimer, startTimer])}
-
-        {useMemo(
-          () => (
-            <FaForward
-              onClick={() => setTimeScalar((timeScalar) => timeScalar * 2)}
-            />
-          ),
-          [setTimeScalar]
-        )}
-
-        <TimeBar />
+    <div>
+      <div className="sidebar">
+        Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
       </div>
+      <div ref={mapContainer} className="map-container" />
     </div>
-  )
+  );
 }
-
-export default Map
