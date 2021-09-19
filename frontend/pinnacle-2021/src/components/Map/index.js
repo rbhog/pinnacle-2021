@@ -62,21 +62,11 @@ export default function App() {
         layout: {},
         paint: {
           'line-color': '#000',
-          'line-width': 8,
+          'line-width': 4,
         },
       });
 
       // s2
-      m.addLayer({
-        id: 'sky',
-        type: 'sky',
-        paint: {
-          'sky-type': 'atmosphere',
-          'sky-atmosphere-sun': [0.0, 90.0],
-          'sky-atmosphere-color': '#1a1a1aEF',
-          'sky-atmosphere-sun-intensity': 15,
-        },
-      });
 
       /**
        * Neighborhood Region
@@ -92,21 +82,11 @@ export default function App() {
         layout: {},
         paint: {
           'line-color': '#9ebf36',
-          'line-width': 8,
+          'line-width': 4,
         },
       });
 
       // s3
-      m.addLayer({
-        id: 'sky',
-        type: 'sky',
-        paint: {
-          'sky-type': 'atmosphere',
-          'sky-atmosphere-sun': [0.0, 90.0],
-          'sky-atmosphere-color': '#1a1a1aEF',
-          'sky-atmosphere-sun-intensity': 15,
-        },
-      });
 
       /**
        * Neighborhood Region
@@ -122,21 +102,11 @@ export default function App() {
         layout: {},
         paint: {
           'line-color': '#59e16a',
-          'line-width': 8,
+          'line-width': 4,
         },
       });
 
       // s4
-      m.addLayer({
-        id: 'sky',
-        type: 'sky',
-        paint: {
-          'sky-type': 'atmosphere',
-          'sky-atmosphere-sun': [0.0, 90.0],
-          'sky-atmosphere-color': '#1a1a1aEF',
-          'sky-atmosphere-sun-intensity': 15,
-        },
-      });
 
       /**
        * Neighborhood Region
@@ -152,21 +122,11 @@ export default function App() {
         layout: {},
         paint: {
           'line-color': '#4aa1f4',
-          'line-width': 8,
+          'line-width': 4,
         },
       });
 
       // s5
-      m.addLayer({
-        id: 'sky',
-        type: 'sky',
-        paint: {
-          'sky-type': 'atmosphere',
-          'sky-atmosphere-sun': [0.0, 90.0],
-          'sky-atmosphere-color': '#1a1a1aEF',
-          'sky-atmosphere-sun-intensity': 15,
-        },
-      });
 
       /**
        * Neighborhood Region
@@ -182,7 +142,7 @@ export default function App() {
         layout: {},
         paint: {
           'line-color': '#a63928',
-          'line-width': 8,
+          'line-width': 4,
         },
       });
     });
