@@ -1,6 +1,11 @@
 const { default: axios } = require('axios');
 const coursesFile = require('./courses.json')
 const sectionsFile = require('./uniquesections.json')
+const addresses = require('./addresses.json')
+const fs = require("fs");
+const path = require('path')
+
+const { pathToFileURL } = require('url');
 
 let depts = Object.keys(coursesFile)
 
@@ -21,6 +26,8 @@ function getRandom(arr, n) {
     }
     return result;
 }
+
+let schedules = []
 
 for (let i = 0; i < numToGen; i++) {
     let randomDepts = getRandom(depts, 4)
@@ -71,6 +78,7 @@ for (let i = 0; i < numToGen; i++) {
             if (!days.some(day => {return !schedule[day].start_time == meeting.start_time})) {
                 console.log("fits schedule")
                 meeting["courseSection"] = courseSection
+                meeting["coords"] = addresses[meeting.building]
                 days.forEach(day => {
                     schedule[day].push(meeting)
                 })
@@ -101,7 +109,10 @@ for (let i = 0; i < numToGen; i++) {
         // })
 
     })
-    console.log(schedule)
+
+    schedules.push(schedule)
+
+    
     /*
 
     {
@@ -124,3 +135,5 @@ for (let i = 0; i < numToGen; i++) {
 
     */
 }
+
+fs.writeFileSync(path.join(__dirname, "schedules.json"), JSON.stringify(schedules))
