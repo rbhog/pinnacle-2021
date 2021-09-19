@@ -8,7 +8,7 @@ dotenv.config();
 console.log(process.env.MAPBOX_ACCESS_TOKEN);
 
 
-var base = "https://api.mapbox.com/directions/v5/mapbox/cycling/";
+var base = "https://api.mapbox.com/directions/v5/mapbox/walking/";
 
 var schedules = JSON.parse(fs.readFileSync(path.join(__dirname, "schedules.json")))
 
