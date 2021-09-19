@@ -53,7 +53,7 @@ export default function App() {
        */
       m.addSource('s1', {
         type: 'geojson',
-        data: './geojson/subject_1.geojson',
+        data: './geojson/path0.geojson',
       });
       m.addLayer({
         id: 's1-outline',
@@ -73,7 +73,7 @@ export default function App() {
        */
       m.addSource('s2', {
         type: 'geojson',
-        data: './geojson/subject_1.geojson',
+        data: './geojson/path1.geojson',
       });
       m.addLayer({
         id: 's2-outline',
@@ -93,7 +93,7 @@ export default function App() {
        */
       m.addSource('s3', {
         type: 'geojson',
-        data: './geojson/subject_1.geojson',
+        data: './geojson/path2.geojson',
       });
       m.addLayer({
         id: 's3-outline',
@@ -113,7 +113,7 @@ export default function App() {
        */
       m.addSource('s4', {
         type: 'geojson',
-        data: './geojson/subject_1.geojson',
+        data: './geojson/path3.geojson',
       });
       m.addLayer({
         id: 's4-outline',
@@ -133,12 +133,106 @@ export default function App() {
        */
       m.addSource('s5', {
         type: 'geojson',
-        data: './geojson/subject_5.geojson',
+        data: './geojson/path4.geojson',
       });
       m.addLayer({
         id: 's5-outline',
         type: 'line',
         source: 's5',
+        layout: {},
+        paint: {
+          'line-color': '#a63928',
+          'line-width': 4,
+        },
+      });
+            m.addSource('s6', {
+        type: 'geojson',
+        data: './geojson/path5.geojson',
+      });
+      m.addLayer({
+        id: 's6-outline',
+        type: 'line',
+        source: 's6',
+        layout: {},
+        paint: {
+          'line-color': '#000',
+          'line-width': 4,
+        },
+      });
+
+      // s2
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s7', {
+        type: 'geojson',
+        data: './geojson/path6.geojson',
+      });
+      m.addLayer({
+        id: 's7-outline',
+        type: 'line',
+        source: 's7',
+        layout: {},
+        paint: {
+          'line-color': '#9ebf36',
+          'line-width': 4,
+        },
+      });
+
+      // s3
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s8', {
+        type: 'geojson',
+        data: './geojson/path7.geojson',
+      });
+      m.addLayer({
+        id: 's8-outline',
+        type: 'line',
+        source: 's8',
+        layout: {},
+        paint: {
+          'line-color': '#59e16a',
+          'line-width': 4,
+        },
+      });
+
+      // s4
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s9', {
+        type: 'geojson',
+        data: './geojson/path8.geojson',
+      });
+      m.addLayer({
+        id: 's4-outline',
+        type: 'line',
+        source: 's9',
+        layout: {},
+        paint: {
+          'line-color': '#4aa1f4',
+          'line-width': 4,
+        },
+      });
+
+      // s5
+
+      /**
+       * Neighborhood Region
+       */
+      m.addSource('s10', {
+        type: 'geojson',
+        data: './geojson/path9.geojson',
+      });
+      m.addLayer({
+        id: 's10-outline',
+        type: 'line',
+        source: 's10',
         layout: {},
         paint: {
           'line-color': '#a63928',
