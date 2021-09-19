@@ -13,7 +13,7 @@ const base = "https://api.umd.io/v1"
 
 const phonenums = ["2402746024"]
 
-const numToGen = 5;
+const numToGen = 400;
 
 function getRandom(arr, n) {
     var result = new Array(n),
@@ -28,6 +28,73 @@ function getRandom(arr, n) {
 }
 
 let schedules = []
+let buildingCases = {}
+
+let staticDept = "CMSC"
+let staticCourse = Object.keys(coursesFile[staticDept])[Math.floor(Math.random() * Object.keys(coursesFile[staticDept]).length)]
+
+for (let i = 0; i < 3; i++) {
+    let randomDepts = getRandom(depts, 3) 
+    let courses = []
+    courses.push(staticCourse)
+    randomDepts.forEach(dept => {
+        courses.push(Object.keys(coursesFile[dept])[Math.floor(Math.random() * Object.keys(coursesFile[dept]).length)])
+    })
+
+    console.log(staticDept)
+    console.log(courses)
+
+    let schedule = {
+        "M" : [],
+        "T" : [],
+        "W" : [],
+        "R" : [],
+        "F" : []
+    }
+
+    courses.forEach(course => {
+        let courseSection = coursesFile[course.substring(0,4)][course][0]
+        if (coursesFile[course.substring(0,4)][course][0] == undefined) return
+        let sectionData = sectionsFile.find(o => o.section_id === courseSection)
+        // console.log(sectionData)
+
+
+        sectionData.meetings.forEach(meeting => {
+            let days = []//meeting.days.split() // all days that the given time meets
+            if(meeting.days.includes('M')){
+                days.push('M');
+            }if(meeting.days.includes('Tu')){
+                days.push('T');
+            }if(meeting.days.includes('W')){
+                days.push('W');
+            }if(meeting.days.includes('Th')){
+                days.push('R');
+            }if(meeting.days.includes('F')){
+                days.push('F');
+            }
+            // console.log(days)
+
+
+            let dayIndex = 0
+            // console.log(days[dayIndex])
+            if (!days.some(day => {return !schedule[day].start_time == meeting.start_time})) {
+                console.log("fits schedule")
+                meeting["courseSection"] = courseSection
+                meeting["coords"] = addresses[meeting.building]
+                if (!buildingCases[meeting.building]) {buildingCases[meeting.building] = 1} else buildingCases[meeting.building] += 1
+                days.forEach(day => {
+                    schedule[day].push(meeting)
+                })
+                // schedule[days[dayIndex++]].push(meeting)
+            } else {
+                return
+            }
+        })
+
+
+    })
+    schedules.push(schedule)
+}
 
 for (let i = 0; i < numToGen; i++) {
     let randomDepts = getRandom(depts, 4)
@@ -49,7 +116,7 @@ for (let i = 0; i < numToGen; i++) {
         let courseSection = coursesFile[course.substring(0,4)][course][0]
         if (coursesFile[course.substring(0,4)][course][0] == undefined) return
         let sectionData = sectionsFile.find(o => o.section_id === courseSection)
-        console.log(sectionData)
+        // console.log(sectionData)
 
 
         sectionData.meetings.forEach(meeting => {
@@ -65,12 +132,7 @@ for (let i = 0; i < numToGen; i++) {
             }if(meeting.days.includes('F')){
                 days.push('F');
             }
-            console.log(days)
-            // days.forEach(day => {
-            //     if(!schedule[day].includes(meeting.start_time())){
-            //         schedule.day.push(meeting.start_time())
-            //     }
-            // })
+            // console.log(days)
 
 
             let dayIndex = 0
@@ -79,6 +141,7 @@ for (let i = 0; i < numToGen; i++) {
                 console.log("fits schedule")
                 meeting["courseSection"] = courseSection
                 meeting["coords"] = addresses[meeting.building]
+                if (!buildingCases[meeting.building]) {buildingCases[meeting.building] = 1} else buildingCases[meeting.building] += 1
                 days.forEach(day => {
                     schedule[day].push(meeting)
                 })
@@ -88,25 +151,6 @@ for (let i = 0; i < numToGen; i++) {
             }
         })
 
-        // axios.get(`${base}/courses/${course}/sections/${courseSection.split("-")[1]}`).then((res) => {
-        //     let classMeets = res.data[0].meetings
-
-        //     // Sorts sections to get unique times
-        //     let uniques = []  // holds unique sections for given course
-        //     const map = new Map()
-
-        //     classMeets.forEach(meeting => {
-        //         let id = Object.values(meeting).join()
-        //         if (!map.has(id)) {
-        //             map.set(id, true)
-        //             uniques.push(meeting)
-        //         }
-        //     })
-
-        //     // end section filtering
-            
-
-        // })
 
     })
 
@@ -135,5 +179,6 @@ for (let i = 0; i < numToGen; i++) {
 
     */
 }
+console.log(buildingCases)
 
-fs.writeFileSync(path.join(__dirname, "schedules.json"), JSON.stringify(schedules))
+// fs.writeFileSync(path.join(__dirname, "schedules_combined.json"), JSON.stringify(schedules))
